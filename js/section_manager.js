@@ -72,16 +72,37 @@ class Section_Manager {
             }
 
         }
-        for (var i=0; i< $this.json_data.length;i++){
-             // split files by semi-colon
-            $this.json_data[i].data= $this.json_data[i].data.split(";")
-            for (var j=0;j< $this.json_data[i].data.length;j++){
-                // split file parts (file, type, left_join_col,right_join_col) by commas
-                $this.json_data[i].data[j]=$this.json_data[i].data[j].split(",")
-
-                $this.load_data($this.json_data[i].data[j][0],$this.json_data[i].data[j][1],$this.check_section_completion,[i,j])
-            }
+        if($.cookie("token")){
+         token=$.cookie("token")
+          section_manager.load_token_data();
         }
+
+
+
+
+    }
+    load_token_data(){
+        var  $this = section_manager
+        for (var i=0; i< $this.json_data.length;i++){
+                // split files by semi-colon
+                $this.json_data[i].data= $this.json_data[i].data.split(";")
+
+                for (var j=0;j< $this.json_data[i].data.length;j++){
+                 console.log( $this.json_data[i].data)
+
+                    // expects two values path,type bundled under one column
+                    // the last item has 4 parts (file, type, left_join_col,right_join_col) by commas
+                    $this.json_data[i].data[j]=$this.json_data[i].data[j].split(",")
+                    //
+                    var path=$this.json_data[i].data[j][0]
+                     if(path.indexOf("token=")>-1){
+                        path=path+token
+                     }
+                    $this.load_data(path,$this.json_data[i].data[j][1],$this.check_section_completion,[i,j])
+                }
+         }
+        console.log("load_token_data")
+
 
     }
     add_overlay(_data,_slot){
@@ -118,7 +139,6 @@ class Section_Manager {
             }
           }
           if(all_data_loaded){
-            console.log("we have all the data")
             $this.join_data($this.json_data[slot[0]])
             //add parent_id to each item
             var all_data=$this.json_data[slot[0]].all_data
@@ -161,6 +181,12 @@ class Section_Manager {
     join_data(section){
         // lets start by storing the first loaded data file in the top spot
         //section.all_data= $.csv.toObjects(section.data[0].data)//todo if the first loaded data is geojson, we'll want to convert it to a flat json structure for searching
+        section.all_data=section.data[0].data
+        // we need to explode the data
+        if(section.all_data?.features){
+            section.all_data= section.all_data.features
+        }
+
         console.log(section)
         //
         //takes one or more data files and joins them on a key
@@ -170,7 +196,8 @@ class Section_Manager {
             for (var j=1;j<section.data.length;j++){
                 var data_to_join=section.data[j]
                 var type=data_to_join[1]
-                if(type=="geojson"){
+                if(type=="geojson" && data_to_join.length>2){
+
                     this.join_geojson(section.all_data,data_to_join.data,data_to_join[2],data_to_join[3],section["title_col"])
                     var show_cols=section.show_cols.split(",").map(function(item) {
                           return item.trim();
@@ -189,66 +216,69 @@ class Section_Manager {
 
     }
     join_geojson(all_data,data_to_join,left_join_col,right_join_col,title_col){
-
         for (var i=0;i<all_data.length;i++){
             // inject an id for access
             all_data[i]._id=i
             //store a sort col for universal access
              all_data[i]._sort_col= all_data[i][title_col]
 
-            var left_join_val=all_data[i][left_join_col].toLowerCase()
-            for (var j=0;j<data_to_join.features.length;j++){
-                //console.log(data_to_join.features[j].properties[right_join_col],"values")
-               if( data_to_join.features[j].properties[right_join_col] && left_join_val == data_to_join.features[j].properties[right_join_col].toLowerCase()){
-                    for (var p in data_to_join.features[j].properties){
-                        // inject all the properties from the geojson
-                        all_data[i][p]=data_to_join.features[j].properties[p]
-                    }
-                    // add the feature
-                    if(!all_data[i]?.feature){
-                        //first time to add features
-
-                        all_data[i].feature = {"type": "FeatureCollection","features": []}
-                        all_data[i].feature.features.push(data_to_join.features[j])
-                        all_data[i].feature.features[0].geometry.type="MultiPolygon"
-                        // keep the feature and child id consistent
-                        all_data[i].feature.features[0].id=all_data[i]._id;
-                        //wrap the coordinates in an array to allow for more coordinates to be joined
-
-                        if(all_data[i].feature.features[0].geometry.coordinates[0][0].length==2){
-                             all_data[i].feature.features[0].geometry.coordinates=[all_data[i].feature.features[0].geometry.coordinates]
-                        }
-
-
-
-                    }else{
-//                        console.log(  all_data[i].feature)
-//                        if(  all_data[i].feature.features[0].geometry.type=="Polygon"){
-//                            //change the type the first time
-//                            all_data[i].feature.features[0].geometry.type="MultiPolygon"
-//                            //warp in array
-//                           all_data[i].feature.features[0].geometry.coordinates=[all_data[i].feature.features[0].geometry.coordinates]
-//                        }
-                        all_data[i].feature.features[0].geometry.coordinates.push(data_to_join.features[j].geometry.coordinates)
-                        console.log("we have more to add",data_to_join.features[j])
-
-                    }
-
-
-                   // break // don't break as there may be more features to add
-               }
+            var left_join_val=all_data[i][left_join_col]
+            // make exception for loading geojson
+            if(all_data[i]?.properties){
+                left_join_val=all_data[i].properties[left_join_col]
+                //NEW also take the title from the properties
+                 all_data[i]._sort_col= all_data[i].properties[title_col]
             }
+             if(left_join_val){
+                left_join_val=left_join_val.toLowerCase()
+                for (var j=0;j<data_to_join.features.length;j++){
 
+                   if( data_to_join.features[j].properties[right_join_col] && left_join_val == data_to_join.features[j].properties[right_join_col].toLowerCase()){
+                        console.log("TRY JOIN___________",data_to_join.features[j])
+//                       for (var p in data_to_join.features[j].properties){
+//                            // inject all the properties from the geojson
+//                            all_data[i][p]=data_to_join.features[j].properties[p]
+//                        }
+//                        // add the feature
+//                        if(!all_data[i]?.feature){
+//                            //first time to add features
+//                            all_data[i].feature = {"type": "FeatureCollection","features": []}
+//                            all_data[i].feature.features.push(data_to_join.features[j])
+//                            all_data[i].feature.features[0].geometry.type="MultiPolygon"
+//                            // keep the feature and child id consistent
+//                            all_data[i].feature.features[0].id=all_data[i]._id;
+//                            //wrap the coordinates in an array to allow for more coordinates to be joined
+//                            if(all_data[i].feature.features[0].geometry.coordinates[0][0].length==2){
+//                                 all_data[i].feature.features[0].geometry.coordinates=[all_data[i].feature.features[0].geometry.coordinates]
+//                            }
+//                        }else{
+//                            all_data[i].feature.features[0].geometry.coordinates.push(data_to_join.features[j].geometry.coordinates)
+//                            console.log("we have more to add",data_to_join.features[j])
+//                        }
+                         //NEW add the points
+                         if(!all_data[i]?.points){
+                            all_data[i].points=[]
+                         }
+                         all_data[i].points.push(data_to_join.features[j])
+                       // break // don't break as there may be more features to add
+                   }
+                }
+            }
         }
     }
     update_geojson_properties(all_data,show_cols,image_col){
         // we really need the details stored in the properties
+        // we need to associate the points with each location, and filter point display based on whether a location is visible.
         for (var i=0;i<all_data.length;i++){
             var properties={}
-
+            //NEW store the feature at the top level for each room
+            var obj_copy =Object.assign({}, all_data[i])
+            all_data[i].feature= {features:[obj_copy]}
+            all_data[i].geometry=null
             for (var j=0;j<show_cols.length;j++){
                 // inject all the properties form the geojson
-               properties[show_cols[j]]=  all_data[i][show_cols[j]]
+                //NEW pull values from first property
+               properties[show_cols[j]]=  all_data[i].feature.features[0].properties[show_cols[j]]
             }
             // and if there is an image col
             if(image_col){
@@ -267,6 +297,7 @@ class Section_Manager {
             }
 
         }
+        console.log(all_data)
     }
 
     setup_interface(){

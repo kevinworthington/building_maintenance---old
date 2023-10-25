@@ -635,6 +635,7 @@ class Layer_Manager {
 
                     onEachFeature: function(feature, layer){
                          markers.addLayer($this.create_geo_feature(feature,_resource_id,layer_obj, layer,url,unique_id++));
+
                     }
                 })
                 layer_obj.addLayer(markers)
@@ -933,10 +934,15 @@ class Layer_Manager {
 
                  layer_obj.addLayer(geo
                  .bindTooltip(data[item_id].feature.features[0].properties[Object.keys(data[item_id].feature.features[0].properties)[0]]));
+
                   // rather than force an id - lets associate the item_id, with the internal leaflet id
                  layer_obj.item_to_layer_id[item_id]=layer_obj.getLayerId(geo)
 
                  items_showing.push(item_id)
+                 if(data[item_id]?.points){
+                    console.log("WE HAVE POINTS",data[item_id].points)
+                 }
+
                  }catch(error){
                       console.log(error,"Error trying to create",data[item_id].feature)//JSON.stringify(
                  }
@@ -964,7 +970,28 @@ class Layer_Manager {
     layer_obj.data = data
 
   }
+     point_in_polygon(p,section_id){
+        //param p for leaflet point
+        //return polygon
+        var item
+        var pt = turf.point([ p.lng,p.lat]);
+        //loop over all the polygons on the map
 
+        var items = section_manager.json_data[section_id].items_showing
+        for(var i =0; i<items.length;i++){
+
+
+           var poly = turf.polygon(section_manager.json_data[section_id].all_data[items[i]].feature.features[0].geometry.coordinates)
+           var hit = turf.booleanPointInPolygon(pt, poly);
+
+           if(hit){
+                item=section_manager.json_data[section_id].all_data[items[i]]
+
+                break
+           }
+        }
+        return item
+    }
     //
     get_layer_select_html(_layer_id,_change_event,is_table,omit_selected){
         console.log("todo get_layer_select_html")

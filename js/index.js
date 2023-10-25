@@ -21,10 +21,14 @@ $( function() {
             LANG=data
             initialize_interface()
     });
+    // check if there is a token saved as a cookie
+    console.log("cookie",$.cookie("token"))
+     if(typeof($.cookie("token")) =='undefined'){
+         setTimeout(function(){
 
-     setTimeout(function(){
-             $('#login_modal').modal('show');
-         },1000);
+                 $('#login_modal').modal('show');
+             },1000);
+    }
 
 
   $("#generate_token").click(function(e){
@@ -37,53 +41,15 @@ $( function() {
           url: "https://www.arcgis.com/sharing/generateToken",
           data: data,
           success: function(_data) {
-
+                console.log(_data,"created")
                 token=_data.token
-                save_point();
+                $.cookie("token",_data.token,{expires: new Date(_data.expires)})
+                 section_manager.load_token_data();
+
             }
         });
     })
 });
-function save_point(){
-    // SEE ALSO https://developers.arcgis.com/rest/services-reference/enterprise/apply-edits-feature-service-.htm
-
-//    var features=[
-//  {
-//    "attributes" : {
-//        "point_type":null,"location_id":null
-//    },
-//    "geometry" : {
-//      "x" : -122.41247978999991,
-//      "y" : 37.770630098000083
-//    }
-//  }
-//]
-
-    var adds= [
-      {
-        "geometry": {
-          "x":   -105.08626699447633,
-          "y" :40.573413632488624,
-          "spatialReference":{"wkid":4326}
-        },
-        "attributes": {
-          "point_type":null,"location_id":null
-        }
-      }
-    ]
-    11603752.389913026
-       var data ={f:"json",token:token,adds:JSON.stringify(adds)}
-    console.log("Post",token)
-    $.ajax({
-          type: "POST",
-          url:  "https://services1.arcgis.com/KNdRU5cN6ENqCTjk/arcgis/rest/services/morgan_interactive_points/FeatureServer/0/applyEdits",
-          data: data,
-          success: function(_data) {
-
-                console.log(_data)
-            }
-        });
-}
 function initialize_interface(){
 
     var sort_str=""

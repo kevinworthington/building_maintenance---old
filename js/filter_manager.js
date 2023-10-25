@@ -589,6 +589,7 @@ class Filter_Manager {
                 if(item_id==data[i]._id){
                     if(data[i]?.feature){
                          setTimeout(function(){
+                         console.log(data[i])
                             map_manager.map_click_event(L.geoJSON(data[i].feature).getBounds().getCenter())
                             map_manager.show_popup_details(data[i].feature.features)
                          }, 1500);
