@@ -45,7 +45,7 @@ class Map_Manager {
 
     this.map = L.map('map',options).setView([this.lat, this.lng], this.z);
 
-    L.control.locate({"flyTo":true,"initialZoomLevel":19}).addTo(this.map);
+    //L.control.locate({"flyTo":true,"initialZoomLevel":19}).addTo(this.map);
 
     // create a reference to this for use during interaction
     var $this=this
@@ -90,78 +90,9 @@ class Map_Manager {
 
 //    L.control.ruler({position: 'topleft',}).addTo(this.map);
 //
-  this.add_draw_control()
-//    //draw control ref: https://github.com/Leaflet/Leaflet.draw , https://leaflet.github.io/Leaflet.draw/docs/leaflet-draw-latest.html
-     var drawnItems = new L.FeatureGroup();
-     this.map.addLayer(drawnItems);
-     var drawControl = new L.Control.Draw({
-         edit: {
-             featureGroup: drawnItems
-         }
-     });
-     this.map.addControl(drawControl);
 
-     this.add_legend()
-
-     $this=this;
-     this.map.on('draw:created', function (e) {
-        console.log("drawn",e)
-        // to do make this more dynamic
-        var section_id=0
-        var poly= layer_manager.point_in_polygon(e.layer._latlng,section_id);
-        var data_to_save = section_manager.json_data[section_id].data[1]
-        var url=data_to_save[0].substring(0,data_to_save[0].lastIndexOf("query?"))+"applyEdits"
-        var left_join_col=data_to_save[2]
-        var right_join_col=data_to_save[3]
-        // we need to know
-        //what property from the polygon to associate with the point
-        // what property in the point to store it in
-        if(!poly?.points){
-            poly.points=[]
-         }
-         poly.points.push({geometry:{type: 'Point', coordinates:[e.layer._latlng.lng,e.layer._latlng.lat] },type:"Feature"})
-         var point_obj={
-            "geometry": {
-              "x": e.layer._latlng.lng,
-              "y" :e.layer._latlng.lat,
-              "spatialReference":{"wkid":4326}
-            },
-            "attributes": {
-              "point_type":null,
-            }
-          }
-         point_obj.attributes[ right_join_col]=poly.properties[left_join_col]
-        // (save to db, add to map etc)
-        map_manager.save_point(url,point_obj)
-        drawnItems.addLayer(e.layer);
-    });
-
-    this.map.on('draw:edited', function (e) {
-      //get bounds str (West, East, North, South)
-      var b = drawnItems.getBounds()
-      $this.show_copy_link(b.getWest(),b.getSouth(),b.getEast(),b.getNorth())
-
-
-    });
   }
-  //updates - [{"attributes":{"OBJECTID":6,"point_type":"light","location_id":null,"GlobalID":"b4d3651b-9d95-44ba-81e1-bc7d35a48834","CreationDate":1698269739213,"Creator":"kaworth_CSUrams","EditDate":1698269739213,"Editor":"kaworth_CSUrams"}}]
-  save_point(url,point_obj){
-    console.log(url,point_obj)
-    // SEE ALSO https://developers.arcgis.com/rest/services-reference/enterprise/apply-edits-feature-service-.htm
-    var adds= [point_obj]
 
-       var data ={f:"json",token:token,adds:JSON.stringify(adds)}
-    console.log("Post",token)
-    $.ajax({
-          type: "POST",
-          url:  url,
-          data: data,
-          success: function(_data) {
-
-                console.log(_data)
-            }
-        });
-}
 
 
   show_copy_link(w,s,e,n){
@@ -196,39 +127,7 @@ class Map_Manager {
     }
   }
 
-  add_draw_control(){
-    L.Control.draw_toggle = L.Control.extend({
-        onAdd: function(map) {
-          this._container = L.DomUtil.create('div', 'leaflet-bar');
-          this._container.classList.add('leaflet-draw-but');
-          L.DomEvent.disableClickPropagation(this._container);
-          L.DomEvent.on(this._container, 'click', function(){
 
-            if($(".leaflet-draw-toolbar").is(":visible")){
-             $(".leaflet-draw-toolbar").hide()
-               $(".leaflet-draw-but").removeClass("leaflet-draw-but-active leaflet-draw-clicked")
-
-            }else{
-              $(".leaflet-draw-toolbar").show()
-              $(".leaflet-draw-but").addClass("leaflet-draw-but-active leaflet-draw-clicked")
-            }
-
-          }, this);
-          this._choice = false;
-          this._defaultCursor = this._map._container.style.cursor;
-
-          return  this._container;
-        }
-    });
-
-    L.control.draw_toggle = function(opts) {
-        return new L.Control.draw_toggle(opts);
-    }
-
-    L.control.draw_toggle({ position: 'topleft' }).addTo(this.map);
-
-
-  }
     set_selected_layer_id(elm){
         var $this= this
         $this.selected_layer_id =$(elm).val();
@@ -272,7 +171,7 @@ class Map_Manager {
             $this.mousedown_time=0
             $this.map.fireEvent('click',{latlng:map_manager.click_lat_lng })
         }
-
+         this.add_legend()
 
     }
      get_selected_layer(){

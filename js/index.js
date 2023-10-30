@@ -5,6 +5,7 @@ var usp={};// the url params object to be populated
 var LANG;
 var map_manager;
 var layer_manager;
+var marker_manager
 var filter_manager;
 var analytics_manager;
 if (typeof(params)=="undefined"){
@@ -45,6 +46,7 @@ $( function() {
                 token=_data.token
                 $.cookie("token",_data.token,{expires: new Date(_data.expires)})
                  section_manager.load_token_data();
+                 $('#login_modal').modal('hide');
 
             }
         });
@@ -132,6 +134,9 @@ function setup_map(){
       })
 
       layer_manager.add_basemap_control()
+
+      marker_manager=new Marker_Manager({ map:map_manager.map})
+      marker_manager.init()
 
 }
 

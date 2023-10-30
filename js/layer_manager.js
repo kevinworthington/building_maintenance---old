@@ -940,7 +940,7 @@ class Layer_Manager {
 
                  items_showing.push(item_id)
                  if(data[item_id]?.points){
-                    console.log("WE HAVE POINTS",data[item_id].points)
+                    marker_manager.draw_points(data[item_id].points)
                  }
 
                  }catch(error){
