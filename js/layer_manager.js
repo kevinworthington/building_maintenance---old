@@ -939,12 +939,13 @@ class Layer_Manager {
                  layer_obj.item_to_layer_id[item_id]=layer_obj.getLayerId(geo)
 
                  items_showing.push(item_id)
-                 if(data[item_id]?.points){
-                    marker_manager.draw_points(data[item_id].points)
-                 }
+//
 
                  }catch(error){
                       console.log(error,"Error trying to create",data[item_id].feature)//JSON.stringify(
+                 }
+                  if(data[item_id]?.points){
+                    marker_manager.draw_points(data[item_id].points)
                  }
              }
 
@@ -955,6 +956,9 @@ class Layer_Manager {
             }catch(error){
 
             }
+            if(data[item_id]?.points){
+                    marker_manager.remove_points(data[item_id].points)
+                 }
 
             items_showing.splice(index,1)
         }

@@ -234,7 +234,7 @@ class Section_Manager {
                 for (var j=0;j<data_to_join.features.length;j++){
 
                    if( data_to_join.features[j].properties[right_join_col] && left_join_val == data_to_join.features[j].properties[right_join_col].toLowerCase()){
-                        console.log("TRY JOIN___________",data_to_join.features[j])
+                        //console.log("TRY JOIN___________",data_to_join.features[j])
 //                       for (var p in data_to_join.features[j].properties){
 //                            // inject all the properties from the geojson
 //                            all_data[i][p]=data_to_join.features[j].properties[p]

@@ -28,15 +28,41 @@ class Marker_Manager {
      var drawControl = new L.Control.Draw({
          edit: {
              featureGroup: $this.drawn_items
-         }
+         },
+         draw: {
+
+             marker: {icon:L.divIcon({
+                            html: marker_options["default"].svg,
+                            className: ''
+                        })},
+             polygon: false,
+             polyline:false,
+             rectangle:false,
+             circle:false,
+             circlemarker:false,
+         },
      });
+     this.item_to_layer_id=[]
      this.map.addControl(drawControl);
 
-     //see all events here https://leaflet.github.io/Leaflet.draw/docs/leaflet-draw-latest.htm
+     //see all events here https://leaflet.github.io/Leaflet.draw/docs/leaflet-draw-latest.html
      this.map.on('draw:created', function (e) {
         console.log("drawn",e)
 
        marker_manager.prep_data_change(e.layer,"adds")
+     });
+     this.map.on('draw:deleted', function (e) {
+        var deleted_ids=[]
+         var points = e.layers._layers
+         for(var p in points){
+
+            deleted_ids.push(points[p].properties.OBJECTID)
+         }
+        // to do make this more dynamic
+        var section_id = 0
+        var data_to_save = section_manager.json_data[section_id].data[1]
+        var url=data_to_save[0].substring(0,data_to_save[0].lastIndexOf("query?"))+"applyEdits"
+        $this.save_point(url,deleted_ids,"deletes")
     });
 
     this.map.on('draw:editmove', function (e) {
@@ -52,12 +78,6 @@ class Marker_Manager {
             }
             //marker_manager.save_point(url,point_obj,"updates")
            marker_manager.prep_data_change(e.layer,"updates")
-        //Get the
-        // Create an array of points that have been edited
-        //note that each point change come through as a separate layer
-        //        var layers=e.layers._layers
-        //
-        //        for(var pl=0;l<layers.length;l++){
 
     });
    }
@@ -65,6 +85,7 @@ class Marker_Manager {
         var $this =  this
          // to do make this more dynamic
         var section_id = 0
+        console.log(point,"point")
         var poly = layer_manager.point_in_polygon(point._latlng,section_id);
         var data_to_save = section_manager.json_data[section_id].data[1]
         var url=data_to_save[0].substring(0,data_to_save[0].lastIndexOf("query?"))+"applyEdits"
@@ -96,7 +117,7 @@ class Marker_Manager {
          }
 
         // (save to db, add to map etc)
-        $this.save_point(url,point_obj,change_type)
+        $this.save_point(url,[point_obj],change_type)
 
 
    }
@@ -104,7 +125,7 @@ class Marker_Manager {
   save_point(url,point_obj,change_type){
         console.log(url,point_obj)
         // SEE ALSO https://developers.arcgis.com/rest/services-reference/enterprise/apply-edits-feature-service-.htm
-       var changes= [point_obj]
+       var changes= point_obj
 
         var data ={f:"json",token:token}
         data[change_type]=JSON.stringify(changes)
@@ -165,23 +186,33 @@ class Marker_Manager {
 
   }
   draw_points(points){
-       console.log("Draw",points);
+//       console.log("Draw",points);
        for(var p=0;p<points.length;p++){
-            console.log(points[p])
             var feature=points[p]
-//            var geo =L.geoJSON(feature, {
-//                pointToLayer: function(feature, latlng) {
-//                    return L.marker(latlng, {
-//                        icon: map_manager.get_marker_icon(1)
-//                      });
-//                },
-//            })
             var c = points[p].geometry.coordinates
             var geo=L.marker([c[1],c[0]])
             geo.properties=points[p].properties
 
             geo.addTo(this.drawn_items)
+            //we'll usre the OBJECTID to easily associate with the leaflet layer id
+            this.item_to_layer_id[points[p].properties.OBJECTID]=this.drawn_items.getLayerId(geo)
+            console.log("type",points[p].properties.type)
+            var marker_option=marker_options[points[p].properties.type]
+            if(typeof(marker_option)== 'undefined'){
+                marker_option=marker_options["default"]
+            }
+            //marker_options
+            geo.setIcon(L.divIcon({
+                            html: marker_option.svg,
+                            className: ''
+                        }));
        }
-
+//        console.log( this.item_to_layer_id)
+  }
+   //remove points
+   remove_points(points){
+       for(var p=0;p<points.length;p++){
+             this.drawn_items.removeLayer(this.item_to_layer_id[points[p].properties.OBJECTID]);
+       }
   }
 }

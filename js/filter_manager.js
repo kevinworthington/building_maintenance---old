@@ -171,6 +171,12 @@ class Filter_Manager {
                 var meets_criteria=true; // a boolean to determine if the item should be included
 
                 var obj=this.section_manager.json_data[i].all_data[j]
+                var parent=false
+                if(obj?.properties){
+                    var parent=obj
+                    obj=obj.properties
+                }
+
                 for (var a in this.filters){
                     if (a==LANG.SEARCH.CHIP_SUBMIT_BUT_LABEL){
                         // if search term not found in both title and sub title
@@ -235,6 +241,10 @@ class Filter_Manager {
                     }
                 }
                 if (meets_criteria==true){
+                        //switch back if parent set
+                        if(parent){
+                            obj=parent
+                        }
                         subset.push(obj)
                 }
             }
@@ -308,6 +318,10 @@ class Filter_Manager {
         this.catalog_counts={}
         for (var i=0;i<_data.length;i++){
             var obj=_data[i]
+            //check if we are dealing with a geojson structure
+            if(obj?.properties){
+                obj=obj.properties
+            }
 //            //add a unique id, prepend 'item_' for use as a variable, only do this on first pass
 //            if(!this.ids_added){
 //              obj["id"]="item_"+i;
