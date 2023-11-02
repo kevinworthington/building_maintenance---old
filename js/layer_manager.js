@@ -926,10 +926,7 @@ class Layer_Manager {
         var index =$.inArray( item_id, items_showing)
         if (index==-1){
             if(data[item_id]?.feature){
-
-
                 try{
-
                  var geo = $this.create_geo_feature(data[item_id].feature,_resource_id,layer_obj, false, false)
 
                  layer_obj.addLayer(geo

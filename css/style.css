@@ -1025,3 +1025,8 @@ a[aria-disabled="true"] {
     padding-top: 5px;
     margin-top: -30px
 }
+/*Hide the save and cancel edit buttons ul.leaflet-draw-actions.leaflet-draw-actions-top li a[title="Cancel editing, discards all changes"]*/
+ul.leaflet-draw-actions.leaflet-draw-actions-top li a[title="Save changes"],ul.leaflet-draw-actions.leaflet-draw-actions-bottom li a[title="Clear all layers"]
+ {
+    display: none;
+}

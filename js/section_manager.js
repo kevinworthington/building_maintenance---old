@@ -88,8 +88,6 @@ class Section_Manager {
                 $this.json_data[i].data= $this.json_data[i].data.split(";")
 
                 for (var j=0;j< $this.json_data[i].data.length;j++){
-                 console.log( $this.json_data[i].data)
-
                     // expects two values path,type bundled under one column
                     // the last item has 4 parts (file, type, left_join_col,right_join_col) by commas
                     $this.json_data[i].data[j]=$this.json_data[i].data[j].split(",")
@@ -101,8 +99,6 @@ class Section_Manager {
                     $this.load_data(path,$this.json_data[i].data[j][1],$this.check_section_completion,[i,j])
                 }
          }
-        console.log("load_token_data")
-
 
     }
     add_overlay(_data,_slot){
@@ -208,6 +204,15 @@ class Section_Manager {
                     section.filter_cols=filter_cols
                     this.update_geojson_properties(section.all_data,show_cols,section?.image_col)
                     filter_manager.create_filter_values(section,section.all_data,filter_cols,section?.year_start_col,section?.year_end_col);
+
+                    //show any points that don't have locations
+                     for (var j=0;j<data_to_join.data.features.length;j++){
+                        var point=data_to_join.data.features[j]
+                        //just show any points that have no join
+                        if(!point.has_join){
+                           marker_manager.draw_points([point])
+                        }
+                     }
                 }
                 //console.log("second data",section.data[j].data,section.data[j][1])
 
@@ -230,39 +235,22 @@ class Section_Manager {
                  all_data[i]._sort_col= all_data[i].properties[title_col]
             }
              if(left_join_val){
-                left_join_val=left_join_val.toLowerCase()
+                left_join_val=left_join_val.toLowerCase();//keep everything lowercase to assist join
+                var has_join=false
                 for (var j=0;j<data_to_join.features.length;j++){
 
                    if( data_to_join.features[j].properties[right_join_col] && left_join_val == data_to_join.features[j].properties[right_join_col].toLowerCase()){
-                        //console.log("TRY JOIN___________",data_to_join.features[j])
-//                       for (var p in data_to_join.features[j].properties){
-//                            // inject all the properties from the geojson
-//                            all_data[i][p]=data_to_join.features[j].properties[p]
-//                        }
-//                        // add the feature
-//                        if(!all_data[i]?.feature){
-//                            //first time to add features
-//                            all_data[i].feature = {"type": "FeatureCollection","features": []}
-//                            all_data[i].feature.features.push(data_to_join.features[j])
-//                            all_data[i].feature.features[0].geometry.type="MultiPolygon"
-//                            // keep the feature and child id consistent
-//                            all_data[i].feature.features[0].id=all_data[i]._id;
-//                            //wrap the coordinates in an array to allow for more coordinates to be joined
-//                            if(all_data[i].feature.features[0].geometry.coordinates[0][0].length==2){
-//                                 all_data[i].feature.features[0].geometry.coordinates=[all_data[i].feature.features[0].geometry.coordinates]
-//                            }
-//                        }else{
-//                            all_data[i].feature.features[0].geometry.coordinates.push(data_to_join.features[j].geometry.coordinates)
-//                            console.log("we have more to add",data_to_join.features[j])
-//                        }
                          //NEW add the points
                          if(!all_data[i]?.points){
                             all_data[i].points=[]
                          }
                          all_data[i].points.push(data_to_join.features[j])
-                       // break // don't break as there may be more features to add
+                         //create a flag to track that the point has been joined
+                         data_to_join.features[j].has_join=true
+
                    }
                 }
+
             }
         }
     }
