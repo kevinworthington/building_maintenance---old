@@ -213,6 +213,9 @@ class Section_Manager {
                            marker_manager.draw_points([point])
                         }
                      }
+                     // enable ability to show popup on point selection
+                     layer_manager.layers.push({ type:"geojson","id":2,"url":false,"layer_obj":marker_manager.drawn_items,"resource_obj":data_to_join});
+                     console.log( layer_manager.layers)
                 }
                 //console.log("second data",section.data[j].data,section.data[j][1])
 

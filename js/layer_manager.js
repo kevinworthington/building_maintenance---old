@@ -64,6 +64,9 @@ class Layer_Manager {
 
   }
   update_layer_order(){
+    console.log("update the layer order")
+
+    return
     //based on the sortable
 
     //note that the layer order is reversed
@@ -1015,8 +1018,7 @@ class Layer_Manager {
     }
     //
     get_layer_select_html(_layer_id,_change_event,is_table,omit_selected){
-        console.log("todo get_layer_select_html")
-        return
+
         var html=""
         if(_change_event){
             html+="<span>"+LANG.IDENTIFY.IDENTIFY_SELECT_LAYER+"</span>"
@@ -1037,8 +1039,11 @@ class Layer_Manager {
                     skip=true
                 }
             }
+            console.log(this.layers[i])
             var title = this.layers[i].resource_obj[filter_manager["title_col"]];
-            title = title.clip_text(30)
+            if(title){
+                title = title.clip_text(30)
+            }
             if ($.inArray(this.layers[i].type,this.table_types)>-1 || !is_table){
                 // omit the selected value if flag set
                 if(!skip){

@@ -177,6 +177,7 @@ class Map_Manager {
      get_selected_layer(){
         // start with the last layer (top) if not yet set - check to make use the previous selection still exists
         if (!this.selected_layer_id || !layer_manager.is_on_map(this.selected_layer_id) ){
+            console.log(layer_manager.layers,"the number of layers")
             if ( layer_manager.layers.length>0){
                 this.selected_layer_id=layer_manager.layers[layer_manager.layers.length-1].id
             }else{
@@ -293,7 +294,7 @@ class Map_Manager {
            }
            var layer_select_html="<span id='layer_select'>"+ this.show_layer_select(layer.id)+"</span>"
           // make sure at least one feature was identified.
-          var  html =""//layer_select_html
+          var  html =layer_select_html
           $this.features=_features
 
           if (typeof(_features)!="undefined" && _features.length > 0) {
