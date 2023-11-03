@@ -441,8 +441,9 @@ class Filter_Manager {
             if (counts){
                count = counts[o]
             }
+            var type ="radio"//checkbox
             html+='<label class="list-group-item d-flex justify-content-between list-group-item-action">'
-            html+='<span><input class="form-check-input me-1 align-left" type="checkbox" value="'+val+'">'+text+'</span>'
+            html+='<span><input class="form-check-input me-1 align-left" type="'+type+'" name="filter_'+_id+'" value="'+val+'">'+text+'</span>'
             html+='<span class="badge bg-primary rounded-pill">'+count+'</span></label>'
         }
 

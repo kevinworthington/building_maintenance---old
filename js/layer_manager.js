@@ -942,6 +942,8 @@ class Layer_Manager {
                       console.log(error,"Error trying to create",data[item_id].feature)//JSON.stringify(
                  }
                   if(data[item_id]?.points){
+
+                    console.log(data[item_id].points)
                     marker_manager.draw_points(data[item_id].points)
                  }
              }
@@ -992,6 +994,24 @@ class Layer_Manager {
            }
         }
         return item
+    }
+    remove_point_in_polygon(point_id,section_id){
+        //param point_id for OBJECTID
+        //return polygon
+
+        var items = section_manager.json_data[section_id].all_data
+
+        for(var i =0; i<items.length;i++){
+            if(items[i]?.points){
+                for(var j =0; j<items[i]?.points.length;j++){
+                    if(items[i]?.points[j].properties.OBJECTID==point_id)
+                        items[i].points.splice(j,1)
+                        break
+                    }
+
+             }
+        }
+
     }
     //
     get_layer_select_html(_layer_id,_change_event,is_table,omit_selected){

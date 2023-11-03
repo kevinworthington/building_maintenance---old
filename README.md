@@ -1,4 +1,10 @@
-# building_histories
+# Building  Maintenance
+The following project is a proof of concept demonstrating how two feature services can be joined and used to track building related information.
+A shape file serves to represent the rooms on a floor, and a point file allows different types of markers to be created in each room.
+
+Both shape and point files are loaded as geojson.
+The point file has been enabled with edit capabilities, and login is required when the app first loads. 
+A column for the shape file acts as a filter for the floor number. A dynamic navigation is created with radio buttons so only one floor appears at a time.
 
 
 # Testing the website locally

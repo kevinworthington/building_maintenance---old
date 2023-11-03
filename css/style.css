@@ -55,33 +55,33 @@ a {
 }
 
 .bg-primary{
- background-color: #28a745 !important;
+ background-color: #ffc108 !important;
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: #ffc108;
+    border-color: #ffc108;
 }
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
     color: #fff;
-    background-color: #228738;
-    border-color: #228738;
+    background-color: #ffc107;
+    border-color: #ffc107;
 
 }
 
 .btn-primary:hover{
-    background-color: #228738;
-    border-color: #228738;
+    background-color: #ffc107;
+    border-color: #ffc107;
 
 }
 .ui-slider-range{
-    background: #28a745;
+    background: #ffc108;
 }
 .form-check-input:checked {
-    background-color: #28a745;
-    border-color:#28a745;
+    background-color: #ffc108;
+    border-color:#ffc108;
 }
 
 /*
@@ -1026,7 +1026,12 @@ a[aria-disabled="true"] {
     margin-top: -30px
 }
 /*Hide the save and cancel edit buttons ul.leaflet-draw-actions.leaflet-draw-actions-top li a[title="Cancel editing, discards all changes"]*/
-ul.leaflet-draw-actions.leaflet-draw-actions-top li a[title="Save changes"],ul.leaflet-draw-actions.leaflet-draw-actions-bottom li a[title="Clear all layers"]
+ul.leaflet-draw-actions.leaflet-draw-actions-bottom li a[title="Clear all layers"]
  {
     display: none;
+}
+.leaflet-marker-icon{
+
+color:black;
+
 }
