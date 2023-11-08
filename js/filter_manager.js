@@ -165,6 +165,7 @@ class Filter_Manager {
             start=section_id
             end =section_id+1
         }
+        console.log(this.filters,"The filters")
         for (var i=start;i<end;i++){
             for (var j=0;j<this.section_manager.json_data[i].all_data.length;j++){
                 // compare each to the filter set to create a subset
@@ -217,7 +218,8 @@ class Filter_Manager {
                         }
 
                     }else if (a!='p'){
-                        if ($.isNumeric(this.filters[a][0])){
+                       //todo need a more elegant way to turn this off
+                        if ($.isNumeric(this.filters[a][0]) && true==false){
                             //we are dealing with a numbers - check range
                             if (obj[a]<this.filters[a][0] || obj[a]>this.filters[a][1]){
                                  meets_criteria=false
@@ -233,7 +235,7 @@ class Filter_Manager {
                                      }
                                 }
                              }else{
-                                if ($.inArray(obj[a],this.filters[a])==-1){
+                                if ($.inArray(String(obj[a]),this.filters[a])==-1){
                                     meets_criteria=false
                                 }
                              }
@@ -373,7 +375,8 @@ class Filter_Manager {
                }
                // generate control html based on data type (use last value to workaround blank first values)
                if (this.catalog[a].length>0 && $.inArray(a,$this.omit_filter_item)==-1){
-                if( $.isNumeric(this.catalog[a][this.catalog[a].length-1])){
+               //todo allow disabling default slider behaviour
+                if( $.isNumeric(this.catalog[a][this.catalog[a].length-1]) && true==false){
                     //create a range slider for numbers - https://jqueryui.com/slider/#range
                      var min = Math.min.apply(Math, this.catalog[a]);
                      var max = Math.max.apply(Math, this.catalog[a]);
@@ -427,6 +430,7 @@ class Filter_Manager {
             }
     }
      get_multi_select(id,options,counts){
+        console.log(options,"options")
         var html=""
         var _id = id.replaceAll(" ", "__");
         html+="<label class='form-label' for='"+_id+"'>"+id+"</label>"
@@ -434,9 +438,9 @@ class Filter_Manager {
         for (var o in options){
             var val = options[o];
             var text=options[o];
-            if(text==""){
-                text=LANG.SEARCH.BLANK
-            }
+//            if(text==""){
+//                text=LANG.SEARCH.BLANK
+//            }
             var count = ""
             if (counts){
                count = counts[o]
@@ -452,11 +456,12 @@ class Filter_Manager {
 
     }
      get_range_slider(id,min,max){
+
         var _id = id.replaceAll(" ", "__");
         var html=""
         html+="<label class='form-label' for='"+_id+"'>"+id+"</label>"
         html+="<div id='"+_id+"_slider' class='slider-range'><div id='"+_id+"_slider_handle0' class='ui-slider-handle'>"+min+"</div><div id='"+_id+"_slider_handle1' class='ui-slider-handle'>"+max+"</div>"
-          html+='<button class="btn btn-outline-secondary slider_toggle " onclick="filter_manager.slider_toggle(this)" type="button" ><i class="bi bi-play-fill"></i></button>'
+        html+='<button class="btn btn-outline-secondary slider_toggle " onclick="filter_manager.slider_toggle(this)" type="button" ><i class="bi bi-play-fill"></i></button>'
           html+="</div>"
         return html
     }

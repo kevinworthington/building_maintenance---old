@@ -933,7 +933,7 @@ class Layer_Manager {
                  var geo = $this.create_geo_feature(data[item_id].feature,_resource_id,layer_obj, false, false)
 
                  layer_obj.addLayer(geo
-                 .bindTooltip(data[item_id].feature.features[0].properties[Object.keys(data[item_id].feature.features[0].properties)[0]]));
+                 .bindTooltip(data[item_id].feature.features[0].properties[Object.keys(data[item_id].feature.features[0].properties)[0]], {permanent: true, opacity: 0.7,direction: "center",className: "my-labels"}));
 
                   // rather than force an id - lets associate the item_id, with the internal leaflet id
                  layer_obj.item_to_layer_id[item_id]=layer_obj.getLayerId(geo)

@@ -1032,6 +1032,11 @@ ul.leaflet-draw-actions.leaflet-draw-actions-bottom li a[title="Clear all layers
 }
 .leaflet-marker-icon{
 
-color:black;
+    color:white;
 
 }
+.leaflet-tooltip.my-labels {
+  background-color: transparent;
+  border: transparent;
+  box-shadow: none;
+  }

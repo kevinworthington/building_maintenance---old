@@ -41,7 +41,7 @@ class Map_Manager {
     this.highlighted_feature;
     this.highlighted_rect;
 
-   var options ={maxZoom: 19,}//default L.CRS.EPSG3857, messy crs: L.CRS.EPSG4326
+   var options ={maxZoom: this.max_zoom,}//default L.CRS.EPSG3857, messy crs: L.CRS.EPSG4326
 
     this.map = L.map('map',options).setView([this.lat, this.lng], this.z);
 
@@ -292,7 +292,7 @@ class Map_Manager {
                 this.popup_close()
                 return
            }
-           var layer_select_html="<span id='layer_select'>"+ this.show_layer_select(layer.id)+"</span>"
+           var layer_select_html=""//"<span id='layer_select'>"+ this.show_layer_select(layer.id)+"</span>"
           // make sure at least one feature was identified.
           var  html =layer_select_html
           $this.features=_features
@@ -582,8 +582,8 @@ class Map_Manager {
         var zoom_level = this.map.getBoundsZoom(bounds)
         console.log("The zoom level is ",zoom_level)
         //prevent zooming in too close
-        if (zoom_level>19){
-            this.map.flyTo(bounds.getCenter(),19);
+        if (zoom_level>this.max_zoom){
+            this.map.flyTo(bounds.getCenter(),this.max_zoom);
         }else{
             this.map.flyToBounds(bounds);
         }

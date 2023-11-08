@@ -1,23 +1,23 @@
 ﻿name,type,data,path_col,title_col,comma_separated_cols,filter_cols,image_col,show_cols,year_start_col,year_end_col,disclaimer,drawing_info
-CSU Building Maintenance,section,"https://services1.arcgis.com/KNdRU5cN6ENqCTjk/arcgis/rest/services/CSU_Building_Footprints/FeatureServer/0//query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=,geojson;https://services1.arcgis.com/KNdRU5cN6ENqCTjk/arcgis/rest/services/morgan_interactive_points/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=,geojson,NAME_LC,location_id",URL,NAME_LC,,"ACCOUNTING,Type",,NAME_LC,,,Welcome to the Colorado State Universities (CSU) Building Maintenance Interactive Floorplan System.," {
+CSU Building Maintenance,section,"https://services1.arcgis.com/KNdRU5cN6ENqCTjk/arcgis/rest/services/Morgan_Rooms/FeatureServer/0//query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=,geojson;https://services1.arcgis.com/KNdRU5cN6ENqCTjk/arcgis/rest/services/morgan_interactive_points/FeatureServer/0/query?where=1%3D1&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&relationParam=&returnGeodetic=false&outFields=*&returnGeometry=true&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&defaultSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=,geojson,RMNO,location_id",URL,RMNO,,"FLOOR",,"RMNO,FLOOR",,,Welcome to the Colorado State Universities (CSU) Building Maintenance Interactive Floorplan System.," {
 ""renderer"": {
 ""type"": ""simple"",
 ""symbol"": {
 ""type"": ""esriSFS"",
 ""style"": ""esriSFSSolid"",
 ""color"": [
-40,
-167,
-69,
-150
+204,
+102,
+255,
+100
 ],
 ""outline"": {
 ""type"": ""esriSLS"",
 ""style"": ""esriSLSSolid"",
 ""color"": [
-40,
-167,
-69,
+204,
+102,
+255,
 255
 ],
 ""width"": 1.5
