@@ -119,7 +119,7 @@ class Marker_Manager {
           // create a css class with svg background-image:
           var resource_marker_class='leaflet-draw-draw-'+m
          count++
-         $("<style type='text/css'>.leaflet-retina .leaflet-draw-toolbar ."+resource_marker_class+":nth-child("+count+")  {  background-image: url('data:image/svg+xml,"+escape(marker_options[m].svg)+"');} </style>").appendTo("head");
+         $("<style type='text/css'>.leaflet-retina .leaflet-draw-toolbar ."+resource_marker_class+":nth-child("+count+")  {  background-size: contain;background-image: url('data:image/svg+xml,"+escape(marker_options[m].svg)+"');} </style>").appendTo("head");
     }
 
 
@@ -272,7 +272,8 @@ class Marker_Manager {
 
   }
   draw_points(points){
-//       console.log("Draw",points);
+      var $this=this
+    //       console.log("Draw",points);
        for(var p=0;p<points.length;p++){
             var feature=points[p]
             var c = points[p].geometry.coordinates
@@ -286,13 +287,39 @@ class Marker_Manager {
 
             //marker_options
             geo.setIcon(this.get_marker_icon(points[p].properties.point_type));
+            geo.on('click', function(e) { layer_manager.layer_click(e,1) });
+
        }
 //        console.log( this.item_to_layer_id)
   }
+
    //remove points
    remove_points(points){
        for(var p=0;p<points.length;p++){
              this.drawn_items.removeLayer(this.item_to_layer_id[points[p].properties.OBJECTID]);
        }
+  }
+  save_details(){
+    //get all te values from the form
+    //create a json structure to save to the item
+    var ext ="_input"
+    var point_obj={}
+    var reserved_prop=["GlobalID","CreationDate","Creator"]
+    $("#props_table input").each(function(){
+        var id=$(this).attr('id')
+
+        var _id = id.substring(0,id.length-ext.length);
+        if($.inArray(_id,reserved_prop)==-1){
+            var val=$(this).val()
+            if($.isNumeric(val)){
+                val =Number(val)
+            }
+            point_obj[_id]=val
+        }
+
+
+    });
+    var url=this.get_save_url()
+    this.save_point(url,[{"attributes":point_obj}],"updates")
   }
 }

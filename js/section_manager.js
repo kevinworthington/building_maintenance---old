@@ -214,7 +214,7 @@ class Section_Manager {
                         }
                      }
                      // enable ability to show popup on point selection
-                     layer_manager.layers.push({ type:"geojson","id":2,"url":false,"layer_obj":marker_manager.drawn_items,"resource_obj":data_to_join});
+                     layer_manager.layers.push({ type:"geojson","id":"section_id_"+1,"url":false,"layer_obj":marker_manager.drawn_items,"resource_obj":data_to_join.data});
                      console.log( layer_manager.layers)
                 }
                 //console.log("second data",section.data[j].data,section.data[j][1])
@@ -302,7 +302,11 @@ class Section_Manager {
                 $("#arrow_0").trigger("click");
                  $("#nav_wrapper").hide();
             }, "100");
+            setTimeout(() => {
+                //todo make this dynamic based on input
+               $("input[name=filter_FLOOR]").trigger("click");
 
+            }, "1000");
        // }
 
     }

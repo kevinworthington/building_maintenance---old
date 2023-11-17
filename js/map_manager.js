@@ -332,7 +332,7 @@ class Map_Manager {
                 //show the first returned feature
                 $this.features =  _features
                 if(typeof(_features)!="undefined" && _features?.length > 0){
-                    console_log( $this.features,"Delayed")
+                    console.log( $this.features,"Delayed")
                     $this.show_popup_details_show_num()
                 }
 
@@ -349,18 +349,30 @@ class Map_Manager {
 
         this.show_highlight_geo_json(this.features[this.result_num])
         var props= this.features[this.result_num].properties
+        console.log(props)
         var html=''
 
          for (var p in props){
             if (p !='_id'){
             var val = String(props[p]).hyper_text()
+            // for edit mode
+            if(val=="null"){
+                val=""
+            }
+            val="<input id='"+p+"_input' value='"+val+"'/>"
+            console.log(val,val=="null")
+
             if(val!=""){
                  html+="<tr><td>"+p+"</td><td>"+val+"</td></tr>"
             }
 
             }
          }
+            // for edit mode
+             html+='<tr><td><button type="button" class="btn btn-primary" onclick="marker_manager.save_details();">Save</button></td></tr>'
         $("#props_table").html(html)
+
+
         // update the text
         $("#popup_result_num").html(this.result_num+1)
         //update the controls
@@ -460,7 +472,8 @@ class Map_Manager {
                         return L.marker(latlng, {icon: $this.get_marker_icon()});
                 }
             }).addTo(this.map);
-        }else{
+        }else if (geo_json?.type){
+
             this.highlighted_feature =  L.geoJSON(geo_json,{
                 style: function (feature) {
                     return {color: "#fff",fillColor:"#fff",fillOpacity:.5};

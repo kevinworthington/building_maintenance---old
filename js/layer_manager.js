@@ -709,6 +709,8 @@ class Layer_Manager {
     return "<a href='javascript:void(0);' onclick=\"filter_manager.show_details('"+resource["id"]+"')\" >"+resource["dct_title_s"]+"</a>"
   }
   layer_click(e,_resource_id){
+
+        console.log("layer CLICKED",e)
         map_manager.layer_clicked=true
         map_manager.selected_layer_id=_resource_id
 
@@ -718,11 +720,19 @@ class Layer_Manager {
         map_manager.popup_show();
          console_log(e)
         try{
-              map_manager.selected_feature_id=layer_manager.get_object_id(e.layer.feature);
-              map_manager.show_popup_details([e.layer.feature])
+
+              if(e?.layer){
+                  map_manager.selected_feature_id=layer_manager.get_object_id(e.layer.feature);
+                  map_manager.show_popup_details([e.layer.feature])
+              }
+              if(e.target){
+                  map_manager.selected_feature_id=layer_manager.get_object_id(e.target);
+                  map_manager.show_popup_details([e.target])
+              }
+
         }catch(error){
             // could be an artificial click
-             console_log(e)
+             console.log(e)
         }
          //map_manager.layer_clicked=false
   }
